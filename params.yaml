@@ -1,0 +1,21 @@
+# data
+index_col: flat_id
+target_col: price
+
+# preprocessing
+one_hot_drop: null  # или 'if_binary'
+scale_numeric: true
+
+# model (RandomForest — простой и стабильный для MVP)
+rf_n_estimators: 300
+rf_max_depth: 12
+rf_random_state: 42
+
+# cv
+n_splits: 5
+n_jobs: -1
+metrics: ['neg_root_mean_squared_error', 'r2', 'neg_mean_absolute_error']
+
+# control
+retrain: false
+
