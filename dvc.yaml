@@ -1,0 +1,35 @@
+stages:
+  get_data:
+    cmd: python scripts/data.py
+    deps:
+      - scripts/data.py
+    params:
+      - index_col
+    outs:
+      - data/real_estate_data.csv
+
+  fit_model:
+    cmd: python scripts/fit.py
+    deps:
+      - data/real_estate_data.csv
+      - scripts/fit.py
+    params:
+      - target_col
+      - test_size
+      - random_state
+      - model_params
+    outs:
+      - models/fitted_model.pkl
+
+  evaluate_model:
+    cmd: python scripts/evaluate.py
+    deps:
+      - data/real_estate_data.csv
+      - models/fitted_model.pkl
+      - scripts/evaluate.py
+    params:
+      - target_col
+      - cv_params
+    metrics:
+      - metrics/cv_results.json
+
