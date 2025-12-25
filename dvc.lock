@@ -1,0 +1,85 @@
+schema: '2.0'
+stages:
+  get_data:
+    cmd: python scripts/data.py
+    deps:
+    - path: scripts/data.py
+      hash: md5
+      md5: 25cd4bc56bce60478b88d4ea0eb329c4
+      size: 1243
+    params:
+      params.yaml:
+        index_col: id
+    outs:
+    - path: data/real_estate_data.csv
+      hash: md5
+      md5: 54c221229dc3f114a187ea21630545fa
+      size: 15015581
+      cloud:
+        my_storage:
+          etag: 54c221229dc3f114a187ea21630545fa
+          version_id: 000646CDE2CBE284
+  fit_model:
+    cmd: python scripts/fit.py
+    deps:
+    - path: data/real_estate_data.csv
+      hash: md5
+      md5: 54c221229dc3f114a187ea21630545fa
+      size: 15015581
+    - path: scripts/fit.py
+      hash: md5
+      md5: 86f9c894f40cedc00f277cb3f20994e7
+      size: 1833
+    params:
+      params.yaml:
+        model_params:
+          n_estimators: 100
+          max_depth: 10
+          random_state: 42
+          n_jobs: -1
+        random_state: 42
+        target_col: price
+        test_size: 0.2
+    outs:
+    - path: models/fitted_model.pkl
+      hash: md5
+      md5: e49ef2550cdf4aee8ec80a6d0b9d1916
+      size: 12613767
+      cloud:
+        my_storage:
+          etag: e49ef2550cdf4aee8ec80a6d0b9d1916
+          version_id: 000646CDE2C70872
+  evaluate_model:
+    cmd: python scripts/evaluate.py
+    deps:
+    - path: data/real_estate_data.csv
+      hash: md5
+      md5: 54c221229dc3f114a187ea21630545fa
+      size: 15015581
+    - path: models/fitted_model.pkl
+      hash: md5
+      md5: e49ef2550cdf4aee8ec80a6d0b9d1916
+      size: 12613767
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: 63469b44af803e1ec14bd6db3406f2b5
+      size: 2404
+    params:
+      params.yaml:
+        cv_params:
+          n_splits: 5
+          n_jobs: -1
+          metrics:
+          - neg_mean_squared_error
+          - neg_mean_absolute_error
+          - r2
+        target_col: price
+    outs:
+    - path: metrics/cv_results.json
+      hash: md5
+      md5: 45d956f47669f8a1518d467ada2b5ce1
+      size: 355
+      cloud:
+        my_storage:
+          etag: 45d956f47669f8a1518d467ada2b5ce1
+          version_id: 000646CDE2C91A80
