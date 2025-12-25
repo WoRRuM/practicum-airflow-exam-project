@@ -165,3 +165,8 @@ cython_debug/
 .env
 .env.local
 .env.*
+
+# DVC artifacts (хранятся в S3, не в Git)
+/data
+/models
+/metrics
